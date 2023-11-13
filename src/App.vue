@@ -11,7 +11,7 @@
         v-model="filtervalue"
         @click="getCards()"
       >
-      <option value="tutti"> tutti</option>
+        <option value="tutti">Tutte le carte</option>
         <option
           v-for="option in store.ArchetypeList"
           :key="option.id"
@@ -21,7 +21,13 @@
         </option>
       </select>
       <div class="wrapper d-flex flex-wrap p-4 m-auto">
-        <div class="w-100 bg-black text-light my-mx p-3">Found {{filteredCards().length  }} cards</div>
+        <div class="w-100 bg-black text-light my-mx p-3">
+          Found {{ filteredCards().length }} cards
+        </div>
+        <div v-if="isLoading" class="loader container">
+          <div class="spinner"></div>
+          <span class="px-2">apetta un attimino...</span>
+        </div>
         <div v-for="card in filteredCards()" :key="card.id" class="my-w mt-0">
           <CardsComponent
             :img="card.card_images[0].image_url_small"
@@ -49,24 +55,28 @@ export default {
   data() {
     return {
       store,
-      filtervalue:"tutti",
+      filtervalue: "tutti",
+      isLoading: true,
     };
   },
 
   methods: {
     getCards() {
+      this.isLoading = true;
       axios.get(store.apiUrl).then((response) => {
         //console.log(response);
         store.cardList = response.data.data;
-        console.log( this.store.cardList);
+        console.log(this.store.cardList);
 
         const uniqueArchetypes = new Set();
         response.data.data.forEach((card) => {
           if (card.archetype && card.archetype.trim() !== "") {
             uniqueArchetypes.add(card.archetype.trim());
           }
+
+          this.isLoading = false;
         });
-       
+
         store.ArchetypeList = [...uniqueArchetypes].map((archetype, id) => ({
           id,
           archetype,
@@ -76,20 +86,18 @@ export default {
     },
     filteredArchetypeList() {
       return this.store.cardList.filter(
-      (card) => card.archetype.trim() === this.filtervalue
-     
-    ); 
-    
+        (card) => card.archetype.trim() === this.filtervalue
+      );
     },
-    filteredCards(){
-      if(this.filtervalue === "tutti"){
+    filteredCards() {
+      if (this.filtervalue === "tutti") {
         return this.store.cardList;
-      }else{
-        return this.store.cardList.filter(card => card.archetype === this.filtervalue);
+      } else {
+        return this.store.cardList.filter(
+          (card) => card.archetype === this.filtervalue
+        );
       }
-      
-       },
-     
+    },
   },
   created() {
     this.getCards();
@@ -98,6 +106,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @use './assets/styles/partials/variables' as *;
 .wrapper {
   background-color: white;
 }
@@ -105,5 +114,30 @@ export default {
 .my-mx {
   margin-left: 20px;
   margin-right: 20px;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid $bgYellow;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
