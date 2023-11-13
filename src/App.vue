@@ -21,7 +21,7 @@
         </option>
       </select>
       <div class="wrapper d-flex flex-wrap p-4 m-auto">
-        <div class="w-100 bg-black text-light my-mx p-3">prova</div>
+        <div class="w-100 bg-black text-light my-mx p-3">Found {{filteredCards().length  }} cards</div>
         <div v-for="card in filteredCards()" :key="card.id" class="my-w mt-0">
           <CardsComponent
             :img="card.card_images[0].image_url_small"
