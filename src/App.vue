@@ -34,7 +34,7 @@ import HeaderComponent from "./components/HeaderComponent.vue";
 import CardsComponent from "./components/CardsComponent.vue";
 import LoaderComponent from "./components/LoaderComponent.vue";
 import SelectComponent from "./components/selectComponent.vue";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export default {
   name: "App",
@@ -48,8 +48,9 @@ export default {
     return {
       store,
       filterValue: "tutti",
-      isLoading: true,
-      error:"",
+      isLoading:true,
+      
+      
     };
   },
 
@@ -79,7 +80,7 @@ export default {
         }));
       }).catch((error)=>{
         console.log(error)
-        this.store.error = error.message;
+        store.error = error.message;
       }).finally(() => {
         this.isLoading = false;
       });
