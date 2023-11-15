@@ -1,6 +1,6 @@
 <template>
     <header class="p-3 d-flex align-items-center ">
-        <img src="/public/image/Yugioh_anime_logo.webp" alt="logo" class="logo">
+        <img src="/image/Yugioh_anime_logo.webp" alt="logo" class="logo">
          <h1 >{{ title }}</h1>
     </header>
 </template>
