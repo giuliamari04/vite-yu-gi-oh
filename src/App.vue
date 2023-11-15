@@ -25,11 +25,6 @@
         </div>
       </div>
       
-      <div class="pagination">
-    <button @click="prevPage" :disabled="currentPage === 1">Pagina precedente</button>
-    <span>{{ currentPage }}</span>
-    <button @click="nextPage" :disabled="currentPage * cardsPerPage >= store.cardList.length">Pagina successiva</button>
-  </div>
     </main>
   </div>
 </template>
@@ -114,20 +109,6 @@ export default {
       const endIndex = startIndex + this.cardsPerPage;
 
       return filteredList.slice(startIndex, endIndex);
-    },
-
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.getCards();
-      }
-    },
-
-    nextPage() {
-      if (this.currentPage * this.cardsPerPage < this.store.cardList.length) {
-        this.currentPage++;
-        this.getCards(); 
-      }
     },
   },
 
