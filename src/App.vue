@@ -63,24 +63,30 @@ export default {
     },
 
     getCards() {
-      store.error = '';
-      const offset = (this.currentPage - 1) * this.cardsPerPage;
+  store.error = '';
+  const offset = (this.currentPage - 1) * this.cardsPerPage;
+  const requestParams = {
+    num: this.cardsPerPage,
+    offset: offset,
+  };
 
-      axios.get(store.apiUrl, {
-        params: {
-          num: this.cardsPerPage,
-          offset: offset,
-          archetype: this.filterValue,
-        }
-      }).then((response) => {
-        store.cardList = response.data.data;
+  if (this.filterValue !== "tutti") {
+    requestParams.archetype = this.filterValue;
+  }
 
-      }).catch((error) => {
-        console.log(error)
-        store.error = error.message;
-      }).finally(() => {
-        this.isLoading = false;
-      });
+  axios.get(store.apiUrl, { params: requestParams })
+    .then((response) => {
+      store.cardList = response.data.data;
+    })
+    .catch((error) => {
+      console.log(error);
+      store.error = error.message;
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
+
+
       axios.get(store.apiUrl).then((response)=>{
       const uniqueArchetypes = new Set();
         response.data.data.forEach((card) => {
